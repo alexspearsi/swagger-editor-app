@@ -36,13 +36,11 @@ export class AuthService {
     this.CRYPT_SALT = Number(this.configService.getOrThrow('CRYPT_SALT'));
   }
 
-  async signup(res: Response, dto: AuthRequestDto) {
+  async signup(dto: AuthRequestDto) {
     const { email, password } = dto;
 
     const existUser = await this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
+      where: { email },
     });
 
     if (existUser) {
@@ -52,22 +50,17 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, this.CRYPT_SALT);
 
     const newUser = await this.prismaService.user.create({
-      data: {
-        email,
-        passwordHash: hashedPassword,
-      },
+      data: { email, passwordHash: hashedPassword },
     });
 
     return { id: newUser.id, email: newUser.email };
   }
 
-  async signin(res: Response, dto: AuthRequestDto) {
+  async signin(dto: AuthRequestDto) {
     const { email, password } = dto;
 
     const existUser = await this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
+      where: { email },
     });
 
     if (!existUser) {
@@ -84,17 +77,13 @@ export class AuthService {
     }
 
     const tokens = this.createTokens(existUser);
-
     await this.saveRefreshTokenHash(existUser.id, tokens.refreshToken);
 
     return tokens;
   }
 
-  private createTokens({ id, email }) {
-    const payload: JwtPayload = {
-      userId: id,
-      email,
-    };
+  private createTokens({ id, email }: { id: number; email: string }) {
+    const payload: JwtPayload = { userId: id, email };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.JWT_SECRET_KEY,
@@ -113,20 +102,14 @@ export class AuthService {
     const hash = await bcrypt.hash(refreshToken, this.CRYPT_SALT);
 
     await this.prismaService.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        refreshTokenHash: hash,
-      },
+      where: { id: userId },
+      data: { refreshTokenHash: hash },
     });
   }
 
   async validate(payload: JwtPayload) {
     const user = await this.prismaService.user.findUnique({
-      where: {
-        id: payload.userId,
-      },
+      where: { id: payload.userId },
     });
 
     if (!user) {
@@ -152,9 +135,7 @@ export class AuthService {
     }
 
     const user = await this.prismaService.user.findUnique({
-      where: {
-        id: payload.userId,
-      },
+      where: { id: payload.userId },
     });
 
     if (!user || !user.refreshTokenHash) {
@@ -171,7 +152,6 @@ export class AuthService {
     }
 
     const tokens = this.createTokens(user);
-
     await this.saveRefreshTokenHash(user.id, tokens.refreshToken);
 
     return tokens;
