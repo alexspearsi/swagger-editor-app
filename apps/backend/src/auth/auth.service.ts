@@ -5,12 +5,15 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthRequestDto } from './dto/auth-request.dto';
+import { RegisterDto } from './dto/register.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
 import { JwtPayload } from './interfaces/jwt.interface';
+import { UserService } from '../user/user.service';
+import { LoginDto } from './dto/login.dto';
+import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +24,9 @@ export class AuthService {
 
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly userService: UserService,
     private readonly configService: ConfigService,
+    private readonly emailConfirmationService: EmailConfirmationService,
     private readonly jwtService: JwtService,
   ) {
     this.TOKEN_EXPIRE_TIME = this.configService.getOrThrow('TOKEN_EXPIRE_TIME');
@@ -34,45 +39,79 @@ export class AuthService {
     );
   }
 
-  async signup(dto: AuthRequestDto) {
-    const { email, password, name } = dto;
+  async register(dto: RegisterDto) {
+    const isExist = await this.userService.findByEmail(dto.email);
 
-    const existUser = await this.prismaService.user.findUnique({
-      where: { email },
-    });
-
-    if (existUser) {
-      throw new ConflictException('Such user already exists');
+    if (isExist) {
+      throw new ConflictException(
+        `Регистрация не удалась. Пользователь с таким email уже существует.
+         Пожалуйста, используйте другой email или войдите в систему.`,
+      );
     }
 
-    const hashedPassword = await hash(password);
+    const newUser = await this.userService.create(
+      dto.email,
+      dto.password,
+      dto.name,
+      false,
+    );
 
-    const newUser = await this.prismaService.user.create({
-      data: { email, passwordHash: hashedPassword, displayName: name },
-    });
+    await this.emailConfirmationService.sendVerificationToken(newUser.email);
 
-    return { id: newUser.id, email: newUser.email, name: newUser.displayName };
+    return {
+      message: `Вы успешно зарегистрировались. Пожалуйста, подтвердите ваш email. 
+      Сообщение было отправлено на ваш почтовый адрес.`,
+    };
   }
 
-  async signin(dto: AuthRequestDto) {
-    const { email, password } = dto;
+  async login(dto: LoginDto) {
+    const user = await this.userService.findByEmail(dto.email);
 
-    const existUser = await this.prismaService.user.findUnique({
-      where: { email },
-    });
-
-    if (!existUser) {
-      throw new ForbiddenException('Credentials are not correct');
+    if (!user || !user.passwordHash) {
+      throw new NotFoundException(
+        `Пользователь не найден. Пожалуйста, проверьте введенные данные`,
+      );
     }
 
-    const isValidPassword = await verify(existUser.passwordHash, password);
+    const isValidPassword = await verify(user.passwordHash, dto.password);
 
     if (!isValidPassword) {
-      throw new ForbiddenException('Credentials are not correct');
+      throw new UnauthorizedException(
+        'Неверный пароль. Пожалуйста, попробуйте еще раз или восстановите пароль, если забыли его.',
+      );
     }
 
-    const tokens = this.createTokens(existUser);
-    await this.saveRefreshTokenHash(existUser.id, tokens.refreshToken);
+    if (!user.isVerified) {
+      await this.emailConfirmationService.sendVerificationToken(user.email);
+
+      throw new UnauthorizedException(
+        `Ваш email не подтвержден. Пожалуйста, проверьте вашу почту и подтвердите адрес.`,
+      );
+    }
+
+    // if (user.isTwoFactorEnabled) {
+    //   if (!dto.code) {
+    //     await this.twoFactorAuthService.sendTwoFactorToken(user.email);
+
+    //     return {
+    //       message:
+    //         'Проверьте вашу почту. Требуется код двухфакторной аутентификации.',
+    //     };
+    //   }
+
+    //   await this.twoFactorAuthService.validateTwoFactorToken(user.email);
+    // }
+
+    const tokens = this.createTokens(user);
+    await this.saveRefreshTokenHash(user.id, tokens.refreshToken);
+
+    return tokens;
+  }
+
+  async issueTokens(user: { id: string; email: string }) {
+    const tokens = this.createTokens(user);
+
+    await this.saveRefreshTokenHash(user.id, tokens.refreshToken);
 
     return tokens;
   }

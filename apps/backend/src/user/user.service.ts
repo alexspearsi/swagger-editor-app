@@ -10,6 +10,15 @@ export class UserService {
   public async findById(id: string) {
     const user = await this.prismaService.user.findUnique({
       where: { id },
+      select: {
+        id: true,
+        email: true,
+        displayName: true,
+        isVerified: true,
+        isTwoFactorEnabled: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (!user) {

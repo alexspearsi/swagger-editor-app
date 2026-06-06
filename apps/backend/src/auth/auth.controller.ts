@@ -10,10 +10,12 @@ import {
 } from '@nestjs/common';
 import * as express from 'express';
 import { AuthService } from './auth.service';
-import { AuthRequestDto } from './dto/auth-request.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtGuard } from './guards/auth.guard';
 import { COOKIE_OPTIONS } from '../common/constants/cookie';
+import type { Response } from 'express';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 const REFRESH_COOKIE = 'refresh_token';
 const ACCESS_COOKIE = 'access_token';
@@ -22,27 +24,27 @@ const ACCESS_COOKIE = 'access_token';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signup')
+  @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() dto: AuthRequestDto) {
-    return this.authService.signup(dto);
+  async register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
   }
 
-  @Post('signin')
+  @Post('login')
   @HttpCode(HttpStatus.OK)
-  async signin(
+  async login(
     @Res({ passthrough: true }) res: express.Response,
-    @Body() dto: AuthRequestDto,
+    @Body() dto: LoginDto,
   ) {
-    const { accessToken, refreshToken } = await this.authService.signin(dto);
+    const result = await this.authService.login(dto);
 
-    res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTIONS);
-    res.cookie(ACCESS_COOKIE, accessToken, {
-      ...COOKIE_OPTIONS,
-      maxAge: 60 * 60 * 1000,
-    });
+    if ('message' in result) {
+      return result;
+    }
 
-    return { accessToken };
+    this.setTokenCookies(res, result.refreshToken, result.accessToken);
+
+    return { message: 'Токены сохранены в cookies успешно.' };
   }
 
   @Post('logout')
@@ -62,19 +64,27 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async refresh(
     @Req() req: express.Request,
-    @Res({ passthrough: true }) res: express.Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const refreshToken: string = req.cookies[REFRESH_COOKIE] ?? '';
 
-    const { accessToken, refreshToken: newRefreshToken } =
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await this.authService.refresh(refreshToken);
 
-    res.cookie(REFRESH_COOKIE, newRefreshToken, COOKIE_OPTIONS);
+    this.setTokenCookies(res, newRefreshToken, newAccessToken);
+
+    return { message: 'Tokens refreshed' };
+  }
+
+  private setTokenCookies(
+    res: Response,
+    refreshToken: string,
+    accessToken: string,
+  ) {
+    res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTIONS);
     res.cookie(ACCESS_COOKIE, accessToken, {
       ...COOKIE_OPTIONS,
       maxAge: 60 * 60 * 1000,
     });
-
-    return { message: 'Tokens refreshed' };
   }
 }
