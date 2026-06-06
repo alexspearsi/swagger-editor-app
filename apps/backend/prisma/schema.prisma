@@ -9,22 +9,41 @@ datasource db {
 }
 
 model User {
-  id               Int              @id @default(autoincrement())
+  id String @id @default(uuid())
+
   email            String           @unique
   passwordHash     String           @map("password_hash")
+
   refreshTokenHash String?          @map("refresh_token_hash")
+
+  isVerified Boolean @default(false) @map("is_verified")
+  isTwoFactorEnabled Boolean @default(false) @map("is_two_factor_enabled")
+
   savedSchema      SavedSchema?
   requestHistory   RequestHistory[]
 
   createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
+model Token {
+  id String @id @default(uuid())
+
+  email String
+  token String @unique
+  type TokenType
+
+  expiresIn DateTime @map("expires_in")
+
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
 model SavedSchema {
-  id      Int    @id @default(autoincrement())
+  id String @id @default(uuid())
   content String
-  userId  Int    @unique @map("user_id")
+  userId  String    @unique @map("user_id")
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -34,7 +53,7 @@ model SavedSchema {
 }
 
 model RequestHistory {
-  id           Int      @id @default(autoincrement())
+  id String @id @default(uuid())
   url          String
   method       String
   statusCode   Int?     @map("status_code")
@@ -44,10 +63,16 @@ model RequestHistory {
   errorDetails String?  @map("error_details")
   timestamp    DateTime @default(now())
 
-  userId Int  @map("user_id")
+  userId String  @map("user_id")
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("request_history")
+}
+
+enum TokenType {
+  VERIFICATION
+  TWO_FACTOR
+  PASSWORD_RESET
 }
