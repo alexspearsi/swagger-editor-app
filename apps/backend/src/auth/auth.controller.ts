@@ -16,6 +16,7 @@ import { JwtGuard } from './guards/auth.guard';
 import { COOKIE_OPTIONS } from '../common/constants/cookie';
 
 const REFRESH_COOKIE = 'refresh_token';
+const ACCESS_COOKIE = 'access_token';
 
 @Controller('auth')
 export class AuthController {
@@ -36,6 +37,10 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.signin(dto);
 
     res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTIONS);
+    res.cookie(ACCESS_COOKIE, accessToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: 60 * 60 * 1000,
+    });
 
     return { accessToken };
   }
@@ -45,11 +50,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async logout(
     @Res({ passthrough: true }) res: express.Response,
-    @CurrentUser() user: { id: number },
+    @CurrentUser() user: { id: string },
   ) {
     await this.authService.logout(user.id);
 
     res.clearCookie(REFRESH_COOKIE);
+    res.clearCookie(ACCESS_COOKIE);
   }
 
   @Post('refresh')
@@ -64,7 +70,11 @@ export class AuthController {
       await this.authService.refresh(refreshToken);
 
     res.cookie(REFRESH_COOKIE, newRefreshToken, COOKIE_OPTIONS);
+    res.cookie(ACCESS_COOKIE, accessToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: 60 * 60 * 1000,
+    });
 
-    return { accessToken };
+    return { message: 'Tokens refreshed' };
   }
 }

@@ -9,7 +9,7 @@ import { AuthRequestDto } from './dto/auth-request.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import { hash, verify } from 'argon2';
 import { JwtPayload } from './interfaces/jwt.interface';
 
 @Injectable()
@@ -18,7 +18,6 @@ export class AuthService {
   private readonly TOKEN_REFRESH_EXPIRE_TIME;
   private readonly JWT_SECRET_KEY;
   private readonly JWT_SECRET_REFRESH_KEY;
-  private readonly CRYPT_SALT;
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -33,11 +32,10 @@ export class AuthService {
     this.JWT_SECRET_REFRESH_KEY = this.configService.getOrThrow(
       'JWT_SECRET_REFRESH_KEY',
     );
-    this.CRYPT_SALT = Number(this.configService.getOrThrow('CRYPT_SALT'));
   }
 
   async signup(dto: AuthRequestDto) {
-    const { email, password } = dto;
+    const { email, password, name } = dto;
 
     const existUser = await this.prismaService.user.findUnique({
       where: { email },
@@ -47,13 +45,13 @@ export class AuthService {
       throw new ConflictException('Such user already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(password, this.CRYPT_SALT);
+    const hashedPassword = await hash(password);
 
     const newUser = await this.prismaService.user.create({
-      data: { email, passwordHash: hashedPassword },
+      data: { email, passwordHash: hashedPassword, displayName: name },
     });
 
-    return { id: newUser.id, email: newUser.email };
+    return { id: newUser.id, email: newUser.email, name: newUser.displayName };
   }
 
   async signin(dto: AuthRequestDto) {
@@ -67,10 +65,7 @@ export class AuthService {
       throw new ForbiddenException('Credentials are not correct');
     }
 
-    const isValidPassword = await bcrypt.compare(
-      password,
-      existUser.passwordHash,
-    );
+    const isValidPassword = await verify(existUser.passwordHash, password);
 
     if (!isValidPassword) {
       throw new ForbiddenException('Credentials are not correct');
@@ -82,7 +77,7 @@ export class AuthService {
     return tokens;
   }
 
-  private createTokens({ id, email }: { id: number; email: string }) {
+  private createTokens({ id, email }: { id: string; email: string }) {
     const payload: JwtPayload = { userId: id, email };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -98,12 +93,12 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private async saveRefreshTokenHash(userId: number, refreshToken: string) {
-    const hash = await bcrypt.hash(refreshToken, this.CRYPT_SALT);
+  private async saveRefreshTokenHash(userId: string, refreshToken: string) {
+    const tokenHash = await hash(refreshToken);
 
     await this.prismaService.user.update({
       where: { id: userId },
-      data: { refreshTokenHash: hash },
+      data: { refreshTokenHash: tokenHash },
     });
   }
 
@@ -142,10 +137,7 @@ export class AuthService {
       throw new ForbiddenException('Invalid or expired refresh token');
     }
 
-    const tokenMatches = await bcrypt.compare(
-      refreshToken,
-      user.refreshTokenHash,
-    );
+    const tokenMatches = await verify(user.refreshTokenHash, refreshToken);
 
     if (!tokenMatches) {
       throw new ForbiddenException('Invalid or expired refresh token');
@@ -157,7 +149,7 @@ export class AuthService {
     return tokens;
   }
 
-  async logout(userId: number) {
+  async logout(userId: string) {
     await this.prismaService.user.updateMany({
       where: { id: userId, refreshTokenHash: { not: null } },
       data: { refreshTokenHash: null },

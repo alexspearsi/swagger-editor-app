@@ -14,6 +14,8 @@ model User {
   email            String           @unique
   passwordHash     String           @map("password_hash")
 
+  displayName String
+
   refreshTokenHash String?          @map("refresh_token_hash")
 
   isVerified Boolean @default(false) @map("is_verified")
