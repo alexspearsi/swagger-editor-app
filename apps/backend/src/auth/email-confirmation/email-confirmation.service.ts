@@ -32,16 +32,14 @@ export class EmailConfirmationService {
     });
 
     if (!existingToken) {
-      throw new NotFoundException(
-        'Токен подтверждения не найден. Пожалуйста, убедитесь, что у вас правильный токен.',
-      );
+      throw new NotFoundException('Verification token not found');
     }
 
     const hasExpired = new Date(existingToken.expiresIn) < new Date();
 
     if (hasExpired) {
       throw new BadRequestException(
-        'Токен подтверждения истек. Пожалуйста, запросите новый токен для подтверждения.',
+        'Verification token has expired. Please request a new one.',
       );
     }
 
@@ -50,9 +48,7 @@ export class EmailConfirmationService {
     );
 
     if (!existingUser) {
-      throw new NotFoundException(
-        'Пользователь с указанным адресом электронной почты не найден. Пожалуйста, убедитесь, что вы ввели правильный email.',
-      );
+      throw new NotFoundException('No account found for this email address');
     }
 
     await this.prismaService.user.update({

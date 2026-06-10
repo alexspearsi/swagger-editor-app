@@ -1,24 +1,24 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class RegisterDto {
-  @IsString({ message: 'Имя должно быть строкой.' })
-  @IsNotEmpty({ message: 'Имя обязательно для заполнения.' })
+  @IsString({ message: 'name must be a string' })
+  @IsNotEmpty({ message: 'name is required' })
   name: string;
 
-  @IsString({ message: 'Email должен быть строкой.' })
-  @IsEmail({}, { message: 'Некорректный формат email.' })
-  @IsNotEmpty({ message: 'Email обязателен для заполнения.' })
+  @IsString({ message: 'email must be a string' })
+  @IsEmail({}, { message: 'email must be a valid email address' })
+  @IsNotEmpty({ message: 'email is required' })
   email: string;
 
-  @IsString({ message: 'Пароль должен быть строкой.' })
-  @IsNotEmpty({ message: 'Пароль обязателен для заполнения.' })
-  @MinLength(6, { message: 'Пароль должен содержать минимум 6 символов.' })
+  @IsString({ message: 'password must be a string' })
+  @IsNotEmpty({ message: 'password is required' })
+  @MinLength(6, { message: 'password must be at least 6 characters long' })
   password: string;
 
-  @IsString({ message: 'Пароль подтверждения должен быть строкой.' })
-  @IsNotEmpty({ message: 'Поле подтверждения пароля не может быть пустым.' })
+  @IsString({ message: 'passwordRepeat must be a string' })
+  @IsNotEmpty({ message: 'passwordRepeat is required' })
   @MinLength(6, {
-    message: 'Пароль подтверждения должен содержать не менее 6 символов.',
+    message: 'passwordRepeat must be at least 6 characters long',
   })
   passwordRepeat: string;
 }

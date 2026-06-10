@@ -43,10 +43,7 @@ export class AuthService {
     const isExist = await this.userService.findByEmail(dto.email);
 
     if (isExist) {
-      throw new ConflictException(
-        `Регистрация не удалась. Пользователь с таким email уже существует.
-         Пожалуйста, используйте другой email или войдите в систему.`,
-      );
+      throw new ConflictException('An account with this email already exists');
     }
 
     const newUser = await this.userService.create(
@@ -59,8 +56,8 @@ export class AuthService {
     await this.emailConfirmationService.sendVerificationToken(newUser.email);
 
     return {
-      message: `Вы успешно зарегистрировались. Пожалуйста, подтвердите ваш email. 
-      Сообщение было отправлено на ваш почтовый адрес.`,
+      message:
+        'Registration successful. Please check your inbox to verify your email.',
     };
   }
 
@@ -68,24 +65,20 @@ export class AuthService {
     const user = await this.userService.findByEmail(dto.email);
 
     if (!user || !user.passwordHash) {
-      throw new NotFoundException(
-        `Пользователь не найден. Пожалуйста, проверьте введенные данные`,
-      );
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const isValidPassword = await verify(user.passwordHash, dto.password);
 
     if (!isValidPassword) {
-      throw new UnauthorizedException(
-        'Неверный пароль. Пожалуйста, попробуйте еще раз или восстановите пароль, если забыли его.',
-      );
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     if (!user.isVerified) {
       await this.emailConfirmationService.sendVerificationToken(user.email);
 
       throw new UnauthorizedException(
-        `Ваш email не подтвержден. Пожалуйста, проверьте вашу почту и подтвердите адрес.`,
+        'Email not verified. A new verification email has been sent.',
       );
     }
 

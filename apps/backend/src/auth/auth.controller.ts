@@ -44,7 +44,7 @@ export class AuthController {
 
     this.setTokenCookies(res, result.refreshToken, result.accessToken);
 
-    return { message: 'Токены сохранены в cookies успешно.' };
+    return { message: 'Tokens saved to cookies successfully' };
   }
 
   @Post('logout')

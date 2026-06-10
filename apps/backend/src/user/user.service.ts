@@ -22,9 +22,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException(
-        'Пользователь не найден. Пожалуйста, проверьте веденные данные.',
-      );
+      throw new NotFoundException('User not found');
     }
 
     return user;

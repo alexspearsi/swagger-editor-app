@@ -35,6 +35,6 @@ export class EmailConfirmationController {
       maxAge: 60 * 60 * 1000,
     });
 
-    return { message: 'Email подтверждён. Токены сохранены в cookies.' };
+    return { message: 'Email verified. Tokens saved to cookies.' };
   }
 }
