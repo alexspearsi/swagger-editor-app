@@ -5,9 +5,12 @@ import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from '../prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
+import { UserService } from '../user/user.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../libs/mail/mail.service';
+import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service';
 
 @Module({
   imports: [
@@ -24,7 +27,13 @@ import { EmailConfirmationModule } from './email-confirmation/email-confirmation
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [
+    AuthService,
+    UserService,
+    PrismaService,
+    MailService,
+    TwoFactorAuthService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

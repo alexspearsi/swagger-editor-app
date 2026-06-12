@@ -14,6 +14,7 @@ import { JwtPayload } from './interfaces/jwt.interface';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
+import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +28,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly configService: ConfigService,
     private readonly emailConfirmationService: EmailConfirmationService,
+    private readonly twoFactorAuthService: TwoFactorAuthService,
     private readonly jwtService: JwtService,
   ) {
     this.TOKEN_EXPIRE_TIME = this.configService.getOrThrow('TOKEN_EXPIRE_TIME');
@@ -82,18 +84,21 @@ export class AuthService {
       );
     }
 
-    // if (user.isTwoFactorEnabled) {
-    //   if (!dto.code) {
-    //     await this.twoFactorAuthService.sendTwoFactorToken(user.email);
+    if (user.isTwoFactorEnabled) {
+      if (!dto.code) {
+        await this.twoFactorAuthService.sendTwoFactorToken(user.email);
 
-    //     return {
-    //       message:
-    //         'Проверьте вашу почту. Требуется код двухфакторной аутентификации.',
-    //     };
-    //   }
+        return {
+          message:
+            'Check your email. Two-factor authentication code is required.',
+        };
+      }
 
-    //   await this.twoFactorAuthService.validateTwoFactorToken(user.email);
-    // }
+      await this.twoFactorAuthService.validateTwoFactorToken(
+        user.email,
+        dto.code,
+      );
+    }
 
     const tokens = this.createTokens(user);
     await this.saveRefreshTokenHash(user.id, tokens.refreshToken);

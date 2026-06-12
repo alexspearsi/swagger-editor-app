@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { EmailConfirmationModule } from './auth/email-confirmation/email-confirmation.module';
 import { MailModule } from './libs/mail/mail.module';
 import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
+import { TwoFactorAuthModule } from './auth/two-factor-auth/two-factor-auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PasswordRecoveryModule } from './auth/password-recovery/password-recove
     EmailConfirmationModule,
     MailModule,
     PasswordRecoveryModule,
+    TwoFactorAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
