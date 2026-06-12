@@ -9,13 +9,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import * as express from 'express';
-import { AuthService } from './auth.service';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
-import { JwtGuard } from './guards/auth.guard';
-import { COOKIE_OPTIONS } from '../common/constants/cookie';
 import type { Response } from 'express';
-import { RegisterDto } from './dto/register.dto';
+
+import { COOKIE_OPTIONS } from '@/common/constants/cookie';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+
+import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { JwtGuard } from './guards/auth.guard';
 
 const REFRESH_COOKIE = 'refresh_token';
 const ACCESS_COOKIE = 'access_token';

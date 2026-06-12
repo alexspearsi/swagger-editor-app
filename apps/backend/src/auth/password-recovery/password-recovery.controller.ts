@@ -6,10 +6,11 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { PasswordRecoveryService } from './password-recovery.service';
-import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Recaptcha } from '@nestlab/google-recaptcha';
+
 import { NewPasswordDto } from './dto/new-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { PasswordRecoveryService } from './password-recovery.service';
 
 @Controller('auth/password-recovery')
 export class PasswordRecoveryController {

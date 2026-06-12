@@ -5,13 +5,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AuthService } from '../auth.service';
-import { MailService } from '../../libs/mail/mail.service';
-import { PrismaService } from '../../prisma/prisma.service';
-import { UserService } from '../../user/user.service';
-import { ConfirmationDto } from './dto/confirmation.dto';
-import { TokenType } from '../../generated/prisma/enums';
 import { v4 as uuidv4 } from 'uuid';
+
+import { TokenType } from '@/generated/prisma/enums';
+import { MailService } from '@/libs/mail/mail.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { UserService } from '@/user/user.service';
+
+import { AuthService } from '../auth.service';
+
+import { ConfirmationDto } from './dto/confirmation.dto';
 
 @Injectable()
 export class EmailConfirmationService {

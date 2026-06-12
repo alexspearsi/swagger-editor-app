@@ -7,9 +7,11 @@ import {
   Res,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import { EmailConfirmationService } from './email-confirmation.service';
+
+import { COOKIE_OPTIONS } from '@/common/constants/cookie';
+
 import { ConfirmationDto } from './dto/confirmation.dto';
-import { COOKIE_OPTIONS } from '../../common/constants/cookie';
+import { EmailConfirmationService } from './email-confirmation.service';
 
 const REFRESH_COOKIE = 'refresh_token';
 const ACCESS_COOKIE = 'access_token';

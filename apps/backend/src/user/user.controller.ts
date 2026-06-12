@@ -8,10 +8,12 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
+
+import { Authorized } from '@/auth/decorators/authorized.decorator';
+import { JwtGuard } from '@/auth/guards/auth.guard';
+
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './update-user.dto';
-import { JwtGuard } from '../auth/guards/auth.guard';
-import { Authorized } from '../auth/decorators/authorized.decorator';
 
 @UseGuards(JwtGuard)
 @Controller('user')

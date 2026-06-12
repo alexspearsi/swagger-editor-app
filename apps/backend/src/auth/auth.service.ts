@@ -5,15 +5,17 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { RegisterDto } from './dto/register.dto';
-import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
-import { JwtPayload } from './interfaces/jwt.interface';
-import { UserService } from '../user/user.service';
+
+import { PrismaService } from '@/prisma/prisma.service';
+import { UserService } from '@/user/user.service';
+
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
+import { JwtPayload } from './interfaces/jwt.interface';
 import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service';
 
 @Injectable()

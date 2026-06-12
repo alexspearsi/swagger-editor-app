@@ -1,6 +1,5 @@
-import { Body, Heading, Link, Tailwind, Text } from '@react-email/components';
+import { Body, Heading, Tailwind, Text } from '@react-email/components';
 import { Html } from '@react-email/html';
-import * as React from 'react';
 
 interface TwoFactorAuthTemplateProps {
   token: string;
