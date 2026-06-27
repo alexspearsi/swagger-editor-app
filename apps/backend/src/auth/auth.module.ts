@@ -12,6 +12,7 @@ import { UserService } from '@/user/user.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service';
 
 @Module({
@@ -35,6 +36,7 @@ import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service'
     PrismaService,
     MailService,
     TwoFactorAuthService,
+    JwtStrategy,
   ],
   exports: [AuthService],
 })
