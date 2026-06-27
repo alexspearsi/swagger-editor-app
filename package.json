@@ -8,7 +8,6 @@
     "apps/backend"
   ],
   "scripts": {
-    "dev": "concurrently --names \"backend,frontend\" --prefix-colors \"cyan,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "npm run dev --workspace=apps/frontend",
     "dev:backend": "npm run start:dev --workspace=apps/backend",
     "build:frontend": "npm run build --workspace=apps/frontend",
@@ -41,7 +40,6 @@
     "@eslint/js": "^9.39.4",
     "@typescript-eslint/eslint-plugin": "^8.59.1",
     "@typescript-eslint/parser": "^8.59.1",
-    "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
