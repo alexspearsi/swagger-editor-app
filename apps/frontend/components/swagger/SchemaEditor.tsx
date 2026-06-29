@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import type { OnMount } from '@monaco-editor/react';
 import * as yaml from 'yaml';
@@ -12,14 +12,54 @@ type Props = {
   format: 'json' | 'yaml';
   onChange: (value: string) => void;
   onFormatChange: (format: 'json' | 'yaml') => void;
+  loadContent?: string | null;
+  onSave?: () => void;
+  isSaving?: boolean;
+  saveStatus?: 'idle' | 'saved' | 'error';
 };
 
-export function SchemaEditor({ format, onChange, onFormatChange }: Props) {
+export function SchemaEditor({
+  format,
+  onChange,
+  onFormatChange,
+  loadContent,
+  onSave,
+  isSaving,
+  saveStatus,
+}: Props) {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const pendingValueRef = useRef<string | null>(null);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  });
 
   const handleMount: OnMount = (editor) => {
     editorRef.current = editor;
+
+    if (pendingValueRef.current !== null) {
+      const value = pendingValueRef.current;
+
+      editor.setValue(value);
+
+      onChangeRef.current(value);
+      pendingValueRef.current = null;
+    }
   };
+
+  useEffect(() => {
+    if (loadContent == null) {
+      return;
+    }
+
+    if (editorRef.current) {
+      editorRef.current.setValue(loadContent);
+    } else {
+      pendingValueRef.current = loadContent;
+      onChangeRef.current(loadContent);
+    }
+  }, [loadContent]);
 
   function handleToggleFormat() {
     const current = editorRef.current?.getValue() ?? '';
@@ -34,15 +74,22 @@ export function SchemaEditor({ format, onChange, onFormatChange }: Props) {
       const parsed = format === 'json' ? JSON.parse(current) : yaml.parse(current);
       const converted =
         newFormat === 'json' ? JSON.stringify(parsed, null, 2) : yaml.stringify(parsed);
-
       editorRef.current?.setValue(converted);
       onChange(converted);
     } catch {
-      return null;
+      return;
     }
 
     onFormatChange(newFormat);
   }
+
+  const saveLabel = isSaving
+    ? 'Saving...'
+    : saveStatus === 'saved'
+      ? 'Saved'
+      : saveStatus === 'error'
+        ? 'Error'
+        : 'Save';
 
   return (
     <div className="flex flex-col h-full">
@@ -53,6 +100,11 @@ export function SchemaEditor({ format, onChange, onFormatChange }: Props) {
           <Button size="sm" variant="outline" onPress={handleToggleFormat}>
             → {format === 'json' ? 'YAML' : 'JSON'}
           </Button>
+          {onSave && (
+            <Button size="sm" variant="outline" onPress={onSave} isDisabled={isSaving}>
+              {saveLabel}
+            </Button>
+          )}
         </div>
       </div>
 

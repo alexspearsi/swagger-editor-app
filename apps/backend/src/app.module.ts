@@ -10,6 +10,7 @@ import { PasswordRecoveryModule } from './auth/password-recovery/password-recove
 import { TwoFactorAuthModule } from './auth/two-factor-auth/two-factor-auth.module';
 import { MailModule } from './libs/mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { SchemaModule } from './schema/schema.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -31,6 +32,7 @@ import { UserModule } from './user/user.module';
     MailModule,
     PasswordRecoveryModule,
     TwoFactorAuthModule,
+    SchemaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
