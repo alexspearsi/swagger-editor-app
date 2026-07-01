@@ -3,6 +3,9 @@
 import { useState } from 'react';
 
 import type { HttpMethod, Operation, Parameter } from '@/types/openapi';
+import { cn } from '@/app/lib/utils/cn';
+import { METHOD_COLORS, PARAM_IN_COLORS, statusColor } from '@/app/lib/ui/colors';
+import { Badge } from '@/components/ui/Badge';
 import { TryItOut } from './TryItOut';
 
 type Props = {
@@ -10,23 +13,6 @@ type Props = {
   method: HttpMethod;
   operation: Operation;
   serverUrl: string;
-};
-
-const METHOD_STYLES: Record<HttpMethod, string> = {
-  get: 'bg-green-100  text-green-700',
-  post: 'bg-blue-100   text-blue-700',
-  put: 'bg-orange-100 text-orange-700',
-  delete: 'bg-red-100    text-red-700',
-  patch: 'bg-yellow-100 text-yellow-700',
-  head: 'bg-gray-100   text-gray-600',
-  options: 'bg-gray-100   text-gray-600',
-};
-
-const PARAM_IN_STYLES: Record<string, string> = {
-  path: 'bg-purple-100 text-purple-700',
-  query: 'bg-blue-100   text-blue-700',
-  header: 'bg-gray-100   text-gray-600',
-  cookie: 'bg-orange-100 text-orange-700',
 };
 
 export function EndpointItem({ path, method, operation, serverUrl }: Props) {
@@ -48,14 +34,9 @@ export function EndpointItem({ path, method, operation, serverUrl }: Props) {
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
       >
-        <span
-          className={[
-            'w-16 shrink-0 rounded px-2 py-0.5 text-center text-xs font-bold uppercase',
-            METHOD_STYLES[method],
-          ].join(' ')}
-        >
+        <Badge className={cn('w-16 shrink-0 text-center uppercase', METHOD_COLORS[method])}>
           {method}
-        </span>
+        </Badge>
         <span className="flex-1 font-mono text-sm text-gray-800">{path}</span>
         {summary && <span className="text-xs text-gray-500 truncate max-w-48">{summary}</span>}
         {deprecated && <span className="text-xs text-red-400">deprecated</span>}
@@ -104,20 +85,9 @@ export function EndpointItem({ path, method, operation, serverUrl }: Props) {
               <div className="space-y-2">
                 {Object.entries(responses).map(([status, response]) => (
                   <div key={status} className="flex items-start gap-2">
-                    <span
-                      className={[
-                        'shrink-0 rounded px-2 py-0.5 text-xs font-bold',
-                        status.startsWith('2')
-                          ? 'bg-green-100 text-green-700'
-                          : status.startsWith('4')
-                            ? 'bg-red-100 text-red-700'
-                            : status.startsWith('5')
-                              ? 'bg-orange-100 text-orange-700'
-                              : 'bg-gray-100 text-gray-600',
-                      ].join(' ')}
-                    >
+                    <Badge className={cn('shrink-0', statusColor(Number(status) || null))}>
                       {status}
-                    </span>
+                    </Badge>
                     <span className="text-xs text-gray-600">{response.description}</span>
                   </div>
                 ))}
@@ -146,14 +116,14 @@ export function EndpointItem({ path, method, operation, serverUrl }: Props) {
 function ParamRow({ param }: { param: Parameter }) {
   return (
     <div className="flex items-center gap-2 text-xs">
-      <span
-        className={[
-          'w-14 shrink-0 rounded px-1 py-0.5 text-center text-xs',
-          PARAM_IN_STYLES[param.in] ?? 'bg-gray-100 text-gray-600',
-        ].join(' ')}
+      <Badge
+        className={cn(
+          'w-14 shrink-0 text-center',
+          PARAM_IN_COLORS[param.in] ?? 'bg-gray-100 text-gray-600',
+        )}
       >
         {param.in}
-      </span>
+      </Badge>
       <span className="font-mono font-medium text-gray-800">{param.name}</span>
       {param.required && <span className="text-red-400">*</span>}
       {param.schema?.type && <span className="text-gray-400">{param.schema.type}</span>}

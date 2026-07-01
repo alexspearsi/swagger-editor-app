@@ -10,9 +10,9 @@ import { ApiError } from '@/app/lib/api/client';
 
 type Status = 'loading' | 'success' | 'error';
 
-interface Props {
+type Props = {
   token?: string;
-}
+};
 
 export function VerificationCard({ token }: Props) {
   const router = useRouter();

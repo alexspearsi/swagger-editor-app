@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Card, FieldError, Input, Label, TextField } from '@heroui/react';
 import { SignInFormData, signInSchema } from '@/app/lib/api/validation/auth';
 import { login } from '@/app/lib/api/auth';
-import { ApiError } from 'next/dist/server/api-utils';
+import { ApiError } from '@/app/lib/api/client';
 
 export function SignInForm() {
   const router = useRouter();

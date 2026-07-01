@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import * as yaml from 'yaml';
 
 import type { OpenAPISchema } from '@/types/openapi';
+import { cn } from '@/app/lib/utils/cn';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { useOrientation } from '@/app/hooks/useOrientation';
 import { SchemaEditor } from './SchemaEditor';
@@ -84,10 +85,7 @@ export function SwaggerWorkspace() {
 
   return (
     <div
-      className={[
-        'flex flex-1 overflow-hidden min-h-0',
-        isLandscape ? 'flex-row' : 'flex-col',
-      ].join(' ')}
+      className={cn('flex flex-1 overflow-hidden min-h-0', isLandscape ? 'flex-row' : 'flex-col')}
     >
       <div className={isLandscape ? 'w-1/2' : 'h-1/2'}>
         <SchemaEditor

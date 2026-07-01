@@ -1,8 +1,8 @@
 import { VerificationCard } from '@/components/auth/VerificationCard';
 
-interface Props {
+type Props = {
   searchParams: Promise<{ token?: string }>;
-}
+};
 
 export default async function NewVerificationPage({ searchParams }: Props) {
   const { token } = await searchParams;
