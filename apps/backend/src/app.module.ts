@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { EmailConfirmationModule } from './auth/email-confirmation/email-confirmation.module';
 import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
 import { TwoFactorAuthModule } from './auth/two-factor-auth/two-factor-auth.module';
+import { HistoryModule } from './history/history.module';
 import { MailModule } from './libs/mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SchemaModule } from './schema/schema.module';
@@ -33,6 +34,7 @@ import { UserModule } from './user/user.module';
     PasswordRecoveryModule,
     TwoFactorAuthModule,
     SchemaModule,
+    HistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
