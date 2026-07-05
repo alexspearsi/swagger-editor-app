@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 
+import { cn } from '@/app/lib/utils/cn';
+
 import { NavAuthButtons } from './NavAuthButtons';
 
 export function AppHeader() {
@@ -18,10 +20,10 @@ export function AppHeader() {
 
   return (
     <header
-      className={[
+      className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300',
         isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-2' : 'bg-white py-4',
-      ].join(' ')}
+      )}
     >
       <div className="max-w-7x1 mx-auto px-6 flex items-center justify-between">
         <NextLink href="/" className="font-bold text-xl tracking-tight">

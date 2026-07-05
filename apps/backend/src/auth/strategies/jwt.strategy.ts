@@ -14,7 +14,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: (req) => req?.cookies?.access_token ?? null,
-      passReqToCallback: true,
       ignoreExpiration: false,
       secretOrKey: configService.getOrThrow('JWT_SECRET_KEY'),
       algorithms: ['HS256'],

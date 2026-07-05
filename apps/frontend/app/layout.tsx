@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { AuthProvider } from '@/components/providers/AuthProvider';
+import { ToastProvider } from '@/components/providers/ToastProvider';
 
 import './globals.css';
 import { getSession } from './lib/api/session';
@@ -16,11 +17,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-full flex flex-col">
-        <AuthProvider user={user}>
-          <AppHeader />
-          <main className="flex-1">{children}</main>
-        </AuthProvider>
+      <body className="h-full flex flex-col">
+        <ToastProvider>
+          <AuthProvider user={user}>
+            <AppHeader />
+            <main className="flex-1 flex flex-col min-h-0">{children}</main>
+          </AuthProvider>
+        </ToastProvider>
       </body>
     </html>
   );

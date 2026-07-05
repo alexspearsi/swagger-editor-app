@@ -1,39 +1,35 @@
 # Swagger Editor App
 
-A Swagger/OpenAPI UI with REST client capabilities — edit OpenAPI specifications and test API endpoints directly in the browser.
+A Swagger/OpenAPI UI with REST client capabilities, edit OpenAPI specifications and test API endpoints directly in the browser.
 
 ## Demo
 
-<!-- Add deployed app URL here -->
-> 🔗 [Live Demo](https://swagger-editor-app.vercel.app)
-
 ## YouTube Walkthrough
-
-<!-- Add video link here -->
-> 📹 [Video Review](https://youtube.com/)
-
----
 
 ## Features
 
-- **Swagger Editor** — paste or type OpenAPI/Swagger specs in JSON or YAML with auto-detection, validation, and format switching
+- **Swagger Editor** — paste or type OpenAPI/Swagger specs in JSON or YAML with auto-detection and format switching
 - **Swagger Viewer** — browse endpoints organized by path and method with full parameter and schema details
 - **Try-It-Out** — execute requests through the server (CORS-free), view response status, headers, and body
 - **cURL Generator** — generate and copy cURL commands from filled request details
-- **Authentication** — sign up / sign in with JWT; private routes protected
+- **Authentication** — sign up / sign in with email confirmation, 2FA, and JWT; private routes protected
+- **Schema Persistence** — save your schema to the server; restored automatically on next login
 - **History & Analytics** — server-side rendered request history with duration, status, size, and error details
-- **i18n** — English and Russian language support
 - **Responsive layout** — horizontal/vertical split view based on screen orientation
 
 ## Tech Stack
 
-| Layer    | Technology                          |
-|----------|-------------------------------------|
-| Frontend | React Router 7 (Framework mode)     |
-| Backend  | NestJS                              |
-| Database | PostgreSQL (Neon)                   |
-| ORM      | Prisma                              |
-| Deploy   | Vercel                              |
+| Layer    | Technology                                              |
+|----------|---------------------------------------------------------|
+| Frontend | Next.js 16 (App Router), React 19, TypeScript          |
+| Styling  | Tailwind CSS 4, HeroUI                                  |
+| Editor   | Monaco Editor                                           |
+| Backend  | NestJS 11, TypeScript                                   |
+| Database | PostgreSQL (Neon)                                       |
+| ORM      | Prisma                                                  |
+| Auth     | JWT (access + refresh tokens), Argon2, Passport         |
+| Email    | Nodemailer + React Email                                |
+| Deploy   | Vercel                                                  |
 
 ## Getting Started
 
@@ -45,7 +41,7 @@ A Swagger/OpenAPI UI with REST client capabilities — edit OpenAPI specificatio
 ### Installation
 
 ```bash
-git clone https://github.com/<your-username>/swagger-editor-app.git
+git clone https://github.com/alexspearsi/swagger-editor-app.git
 cd swagger-editor-app
 npm install
 ```
@@ -55,41 +51,39 @@ npm install
 Copy the example files and fill in the values:
 
 ```bash
-cp apps/frontend/.env.example apps/frontend/.env
 cp apps/backend/.env.example apps/backend/.env
-```
-
-**`apps/backend/.env`**
-
-```env
-DATABASE_URL=postgresql://...
-JWT_SECRET=your_jwt_secret
-```
-
-**`apps/frontend/.env`**
-
-```env
-BACKEND_URL=http://localhost:3001
+cp apps/frontend/.env.example apps/frontend/.env
 ```
 
 ### Running Locally
 
 ```bash
-# Run both frontend and backend
+# Run both frontend and backend concurrently
 npm run dev
-
-# Frontend only (http://localhost:5173)
-npm run dev --workspace=apps/frontend
-
-# Backend only (http://localhost:3001)
-npm run dev --workspace=apps/backend
 ```
 
-### Running Tests
+- Frontend: http://localhost:3000
+- Backend: http://localhost:3001
 
 ```bash
+# Frontend only
+npm run dev:frontend
+
+# Backend only
+npm run dev:backend
+```
+
+### Other Commands
+
+```bash
+# Lint
+npm run lint
+
+# Format
+npm run format
+
+# Tests
 npm run test
-npm run test:coverage
 ```
 
 ## Project Structure
@@ -97,10 +91,21 @@ npm run test:coverage
 ```
 swagger-editor-app/
 ├── apps/
-│   ├── frontend/   # React Router 7 (framework mode)
-│   └── backend/    # NestJS
+│   ├── frontend/          # Next.js 16 (App Router)
+│   │   ├── app/           # Pages and API routes
+│   │   ├── components/    # UI components
+│   │   └── types/         # TypeScript types
+│   └── backend/           # NestJS
+│       ├── src/
+│       │   ├── auth/      # Authentication (JWT, 2FA, email confirmation)
+│       │   ├── user/      # User profile
+│       │   ├── schema/    # Saved schemas
+│       │   ├── history/   # Request history
+│       │   └── prisma/    # Database service
+│       └── prisma/        # Schema and migrations
 ├── .github/
 │   └── pull_request_template.md
+├── .husky/
 ├── .gitignore
 └── README.md
 ```
@@ -109,7 +114,7 @@ swagger-editor-app/
 
 | Name | Role | GitHub |
 |------|------|--------|
-| Alex | Developer | [@rosenbaum-dv](https://github.com/rosenbaum-dv) |
+| Alex | Developer | [@alexspearsi](https://github.com/alexspearsi) |
 
 ## Course
 
