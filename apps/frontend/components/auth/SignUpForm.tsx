@@ -5,7 +5,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Card, FieldError, Input, Label, TextField } from '@heroui/react';
+import { Button, Card, FieldError, Input, Label, TextField, toast } from '@heroui/react';
 
 import { register as registerUser } from '@/app/lib/api/auth';
 import { ApiError } from '@/app/lib/api/client';
@@ -27,6 +27,8 @@ export function SignUpForm() {
   async function onSubmit(data: SignUpFormData) {
     setServerError(null);
     try {
+      toast.info('Check your inbox and confirm your email to activate your account');
+
       await registerUser(data);
 
       router.push('/');
