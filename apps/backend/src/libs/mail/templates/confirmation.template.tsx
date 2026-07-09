@@ -24,18 +24,18 @@ export function ConfirmationTemplate({
   return (
     <Html lang="ru">
       <Head />
-      <Preview>Подтвердите email, чтобы войти в SwaggerHub</Preview>
+      <Preview>Подтвердите email, чтобы войти в SwaggerGo</Preview>
       <Body style={body}>
         <Container style={container}>
           <Section style={logoSection}>
-            <Text style={logo}>SwaggerHub</Text>
+            <Text style={logo}>SwaggerGo</Text>
           </Section>
 
           <Section style={content}>
             <Text style={heading}>Подтвердите ваш email</Text>
 
             <Text style={text}>
-              Вы создали аккаунт на SwaggerHub. Нажмите кнопку ниже, чтобы
+              Вы создали аккаунт на SwaggerGo. Нажмите кнопку ниже, чтобы
               подтвердить адрес и начать работу.
             </Text>
 
@@ -50,7 +50,7 @@ export function ConfirmationTemplate({
           </Section>
 
           <Section style={footer}>
-            <Text style={footerText}>SwaggerHub · API Documentation</Text>
+            <Text style={footerText}>SwaggerGo · API Documentation</Text>
           </Section>
         </Container>
       </Body>

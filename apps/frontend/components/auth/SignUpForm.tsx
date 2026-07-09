@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
@@ -13,7 +12,6 @@ import { SignUpFormData, signUpSchema } from '@/app/lib/api/validation/auth';
 
 export function SignUpForm() {
   const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     control,
@@ -25,17 +23,16 @@ export function SignUpForm() {
   });
 
   async function onSubmit(data: SignUpFormData) {
-    setServerError(null);
     try {
-      toast.info('Check your inbox and confirm your email to activate your account');
-
       await registerUser(data);
+
+      toast.info('Check your inbox and confirm your email to activate your account');
 
       router.push('/');
       router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
-        setServerError(error.message);
+        toast.danger(error.message);
       }
     }
   }
@@ -120,8 +117,6 @@ export function SignUpForm() {
               </TextField>
             )}
           />
-
-          {serverError && <p className="text-sm text-red-500">{serverError}</p>}
 
           <Button type="submit" variant="primary" fullWidth isDisabled={isSubmitting}>
             {isSubmitting ? 'Creating account…' : 'Sign Up'}

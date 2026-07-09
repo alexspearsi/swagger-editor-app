@@ -2,7 +2,7 @@
 
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Button, buttonVariants } from '@heroui/react';
+import { Button, buttonVariants, toast } from '@heroui/react';
 
 import { useAuth } from '@/components/providers/AuthProvider';
 import { logout } from '@/app/lib/api/auth';
@@ -14,6 +14,7 @@ export function NavAuthButtons() {
   async function handleLogout() {
     await logout();
 
+    toast.success('Signed out successfully');
     router.refresh();
   }
 

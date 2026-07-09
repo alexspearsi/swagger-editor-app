@@ -25,7 +25,7 @@ export function AppHeader() {
         isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-2' : 'bg-white py-4',
       )}
     >
-      <div className="max-w-7x1 mx-auto px-6 flex items-center justify-between">
+      <div className="w-full px-6 flex items-center justify-between">
         <NextLink href="/" className="font-bold text-xl tracking-tight">
           SwaggerUI
         </NextLink>
