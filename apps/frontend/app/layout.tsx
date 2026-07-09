@@ -6,6 +6,7 @@ import { ToastProvider } from '@/components/providers/ToastProvider';
 import './globals.css';
 import { getSession } from './lib/api/session';
 import { AppHeader } from '@/components/header/Header';
+import { AppFooter } from '@/components/footer/Footer';
 
 export const metadata: Metadata = {
   title: 'Swagger Editor',
@@ -22,6 +23,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <AuthProvider user={user}>
             <AppHeader />
             <main className="flex-1 flex flex-col min-h-0">{children}</main>
+            <AppFooter />
           </AuthProvider>
         </ToastProvider>
       </body>
