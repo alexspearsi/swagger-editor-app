@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@heroui/react';
+import { Button, toast } from '@heroui/react';
 
 import type { HttpMethod, Operation } from '@/types/openapi';
 import { statusColor } from '@/app/lib/ui/colors';
@@ -57,7 +57,6 @@ export function TryItOut({ path, method, operation, serverUrl }: Props) {
     { key: 'Content-Type', value: 'application/json' },
   ]);
   const [body, setBody] = useState('');
-  const [curlVisible, setCurlVisible] = useState(false);
   const [response, setResponse] = useState<ProxyResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -98,7 +97,7 @@ export function TryItOut({ path, method, operation, serverUrl }: Props) {
 
     navigator.clipboard.writeText(curl);
 
-    setCurlVisible(true);
+    toast.success('cURL copied to clipboard');
   }
 
   function updateKV(
@@ -238,12 +237,6 @@ export function TryItOut({ path, method, operation, serverUrl }: Props) {
           Copy cURL
         </Button>
       </div>
-
-      {curlVisible && (
-        <pre className="overflow-auto rounded bg-gray-900 p-3 text-xs text-green-400">
-          {generateCurl(getFinalUrl(), method, getRequestHeaders(), hasBody ? body : undefined)}
-        </pre>
-      )}
 
       {response && (
         <div className="space-y-2">

@@ -10,6 +10,7 @@ import { useOrientation } from '@/app/hooks/useOrientation';
 import { SchemaEditor } from './SchemaEditor';
 import { SchemaViewer } from './SchemaViewer';
 import { getSavedSchema, saveSchema } from '@/app/api/schema';
+import { toast } from '@heroui/react';
 
 function detectFormat(value: string): 'json' | 'yaml' {
   try {
@@ -37,7 +38,6 @@ export function SwaggerWorkspace() {
   const [format, setFormat] = useState<'json' | 'yaml'>('yaml');
   const [loadContent, setLoadContent] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
   const { isAuthenticated } = useAuth();
   const isLandscape = useOrientation();
 
@@ -64,14 +64,11 @@ export function SwaggerWorkspace() {
 
     try {
       await saveSchema(rawSchema);
-
-      setSaveStatus('saved');
+      toast.success('Schema saved');
     } catch {
-      setSaveStatus('error');
+      toast.danger('Failed to save schema');
     } finally {
       setIsSaving(false);
-
-      setTimeout(() => setSaveStatus('idle'), 2000);
     }
   }
 
@@ -95,7 +92,6 @@ export function SwaggerWorkspace() {
           loadContent={loadContent}
           onSave={isAuthenticated ? handleSave : undefined}
           isSaving={isSaving}
-          saveStatus={saveStatus}
         />
       </div>
       <div className={isLandscape ? 'w-1/2 border-l' : 'h-1/2 border-t'}>

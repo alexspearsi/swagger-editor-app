@@ -1,18 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Card, FieldError, Input, Label, TextField } from '@heroui/react';
+import { Button, Card, FieldError, Input, Label, TextField, toast } from '@heroui/react';
 import { SignInFormData, signInSchema } from '@/app/lib/api/validation/auth';
 import { login } from '@/app/lib/api/auth';
 import { ApiError } from '@/app/lib/api/client';
 
 export function SignInForm() {
   const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     control,
@@ -24,16 +22,16 @@ export function SignInForm() {
   });
 
   async function onSubmit(data: SignInFormData) {
-    setServerError(null);
-
     try {
       await login(data);
+
+      toast.success('Welcome back!');
 
       router.push('/');
       router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
-        setServerError(error.message);
+        toast.danger(error.message);
       }
     }
   }
@@ -82,8 +80,6 @@ export function SignInForm() {
               </TextField>
             )}
           />
-
-          {serverError && <p className="text-sm text-red-500">{serverError}</p>}
 
           <Button type="submit" variant="primary" fullWidth isDisabled={isSubmitting}>
             {isSubmitting ? 'Signing in…' : 'Sign In'}

@@ -15,7 +15,6 @@ type Props = {
   loadContent?: string | null;
   onSave?: () => void;
   isSaving?: boolean;
-  saveStatus?: 'idle' | 'saved' | 'error';
 };
 
 export function SchemaEditor({
@@ -25,7 +24,6 @@ export function SchemaEditor({
   loadContent,
   onSave,
   isSaving,
-  saveStatus,
 }: Props) {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const pendingValueRef = useRef<string | null>(null);
@@ -83,13 +81,7 @@ export function SchemaEditor({
     onFormatChange(newFormat);
   }
 
-  const saveLabel = isSaving
-    ? 'Saving...'
-    : saveStatus === 'saved'
-      ? 'Saved'
-      : saveStatus === 'error'
-        ? 'Error'
-        : 'Save';
+  const saveLabel = isSaving ? 'Saving...' : 'Save';
 
   return (
     <div className="flex flex-col h-full">
