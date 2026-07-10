@@ -7,6 +7,11 @@ import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 export async function createNestApp(): Promise<INestApplication> {
+  console.log(
+    '[boot] COOKIE_DOMAIN =',
+    JSON.stringify(process.env.COOKIE_DOMAIN),
+  );
+
   const app = await NestFactory.create(AppModule, new ExpressAdapter());
 
   app.use(cookieParser());
