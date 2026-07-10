@@ -18,9 +18,14 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors({ origin: 'http://localhost:3000', credentials: true });
+  const configService = app.get(ConfigService);
 
-  const port = app.get(ConfigService).getOrThrow<number>('PORT');
+  app.enableCors({
+    origin: configService.getOrThrow<string>('ALLOWED_ORIGIN'),
+    credentials: true,
+  });
+
+  const port = configService.getOrThrow<number>('PORT');
   await app.listen(port);
 }
 bootstrap();
