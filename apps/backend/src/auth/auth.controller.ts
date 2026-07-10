@@ -58,8 +58,8 @@ export class AuthController {
   ) {
     await this.authService.logout(user.id);
 
-    res.clearCookie(REFRESH_COOKIE);
-    res.clearCookie(ACCESS_COOKIE);
+    res.clearCookie(REFRESH_COOKIE, { domain: COOKIE_OPTIONS.domain });
+    res.clearCookie(ACCESS_COOKIE, { domain: COOKIE_OPTIONS.domain });
   }
 
   @Post('refresh')
