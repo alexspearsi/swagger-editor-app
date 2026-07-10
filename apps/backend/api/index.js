@@ -1,4 +1,4 @@
-const { createNestApp } = require('../dist/create-app');
+const { createNestApp } = require('../dist/src/create-app');
 
 let cachedAppPromise;
 
