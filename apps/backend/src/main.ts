@@ -1,31 +1,11 @@
-import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import cookieParser from 'cookie-parser';
 
-import { AppModule } from './app.module';
+import { createNestApp } from './create-app';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, new ExpressAdapter());
+  const app = await createNestApp();
 
-  app.use(cookieParser());
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    }),
-  );
-
-  const configService = app.get(ConfigService);
-
-  app.enableCors({
-    origin: configService.getOrThrow<string>('ALLOWED_ORIGIN'),
-    credentials: true,
-  });
-
-  const port = configService.getOrThrow<number>('PORT');
+  const port = app.get(ConfigService).getOrThrow<number>('PORT');
   await app.listen(port);
 }
 bootstrap();
