@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Button, Card } from '@heroui/react';
+import { Button, Card, toast } from '@heroui/react';
 
 import { confirmEmail } from '@/app/lib/api/auth';
 import { ApiError } from '@/app/lib/api/client';
@@ -38,11 +38,11 @@ export function VerificationCard({ token }: Props) {
       .catch((err) => {
         setStatus('error');
 
-        if (err instanceof ApiError) {
-          setError(err.message);
-        } else {
-          setError('Something went wrong. Please try again.');
-        }
+        const message =
+          err instanceof ApiError ? err.message : 'Something went wrong. Please try again.';
+
+        setError(message);
+        toast.danger(message);
       });
   }, [token, router]);
 

@@ -21,16 +21,35 @@ function detectFormat(value: string): 'json' | 'yaml' {
   }
 }
 
-function parseSchema(value: string, format: 'json' | 'yaml'): OpenAPISchema | null {
-  if (!value.trim()) return null;
-  try {
-    const parsed = format === 'json' ? JSON.parse(value) : yaml.parse(value);
-    if (!parsed || typeof parsed !== 'object') return null;
-    if (!('paths' in parsed) && !('openapi' in parsed) && !('swagger' in parsed)) return null;
-    return parsed as OpenAPISchema;
-  } catch {
-    return null;
+type ParseResult = { data: OpenAPISchema; error: null } | { data: null; error: string | null };
+
+function parseSchema(value: string, format: 'json' | 'yaml'): ParseResult {
+  if (!value.trim()) {
+    return { data: null, error: null };
   }
+
+  let parsed: unknown;
+
+  try {
+    parsed = format === 'json' ? JSON.parse(value) : yaml.parse(value);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to parse schema';
+
+    return { data: null, error: `Invalid ${format.toUpperCase()}: ${message}` };
+  }
+
+  if (!parsed || typeof parsed !== 'object') {
+    return { data: null, error: 'Schema must be an object' };
+  }
+
+  if (!('paths' in parsed) && !('openapi' in parsed) && !('swagger' in parsed)) {
+    return {
+      data: null,
+      error: 'Not a valid OpenAPI schema: missing "openapi", "swagger" or "paths" field',
+    };
+  }
+
+  return { data: parsed as OpenAPISchema, error: null };
 }
 
 export function SwaggerWorkspace() {
@@ -41,7 +60,10 @@ export function SwaggerWorkspace() {
   const { isAuthenticated } = useAuth();
   const isLandscape = useOrientation();
 
-  const parsedSchema = useMemo(() => parseSchema(rawSchema, format), [rawSchema, format]);
+  const { data: parsedSchema, error: schemaError } = useMemo(
+    () => parseSchema(rawSchema, format),
+    [rawSchema, format],
+  );
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -95,7 +117,7 @@ export function SwaggerWorkspace() {
         />
       </div>
       <div className={isLandscape ? 'w-1/2 border-l' : 'h-1/2 border-t'}>
-        <SchemaViewer schema={parsedSchema} />
+        <SchemaViewer schema={parsedSchema} error={schemaError} />
       </div>
     </div>
   );

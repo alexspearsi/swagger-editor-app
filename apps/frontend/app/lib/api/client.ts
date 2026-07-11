@@ -19,9 +19,13 @@ export const apiClient = axios.create({
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<{ message?: string }>) => {
-    throw new ApiError(
-      error.response?.status ?? 500,
-      error.response?.data?.message ?? 'Unknown error',
-    );
+    const status = error.response?.status ?? 500;
+    const isAuthEndpoint = error.config?.url?.startsWith('/auth/');
+
+    if (status === 401 && !isAuthEndpoint && typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
+
+    throw new ApiError(status, error.response?.data?.message ?? 'Unknown error');
   },
 );
