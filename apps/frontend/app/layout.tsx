@@ -22,7 +22,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ToastProvider>
           <AuthProvider user={user}>
             <AppHeader />
-            <main className="flex-1 flex flex-col min-h-0">{children}</main>
+            <main className="flex-1 flex flex-col">{children}</main>
             <AppFooter />
           </AuthProvider>
         </ToastProvider>

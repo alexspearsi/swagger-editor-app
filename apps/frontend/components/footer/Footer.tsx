@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 
 export function AppFooter() {
   return (
-    <footer className="border-t bg-white py-6">
+    <footer className="border-t bg-white py-6 shrink-0">
       <div className="w-full px-6 flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
         <p className="text-sm text-gray-500">
           © {new Date().getFullYear()} SwaggerUI. Built for{' '}
