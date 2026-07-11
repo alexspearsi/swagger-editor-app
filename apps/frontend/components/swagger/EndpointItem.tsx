@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import type { HttpMethod, Operation, Parameter } from '@/types/openapi';
+import type { HttpMethod, MediaType, Operation, Parameter } from '@/types/openapi';
 import { cn } from '@/app/lib/utils/cn';
 import { METHOD_COLORS, PARAM_IN_COLORS, statusColor } from '@/app/lib/ui/colors';
 import { Badge } from '@/components/ui/Badge';
@@ -69,11 +69,7 @@ export function EndpointItem({ path, method, operation, serverUrl }: Props) {
               {Object.entries(requestBody.content ?? {}).map(([contentType, media]) => (
                 <div key={contentType}>
                   <span className="text-xs font-mono text-gray-500">{contentType}</span>
-                  {media.schema && (
-                    <pre className="mt-1 overflow-auto rounded bg-gray-900 p-3 text-xs text-gray-100">
-                      {JSON.stringify(media.schema, null, 2)}
-                    </pre>
-                  )}
+                  <MediaContent media={media} />
                 </div>
               ))}
             </section>
@@ -82,13 +78,21 @@ export function EndpointItem({ path, method, operation, serverUrl }: Props) {
           {Object.keys(responses).length > 0 && (
             <section>
               <h4 className="mb-2 text-xs font-semibold uppercase text-gray-400">Responses</h4>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {Object.entries(responses).map(([status, response]) => (
-                  <div key={status} className="flex items-start gap-2">
-                    <Badge className={cn('shrink-0', statusColor(Number(status) || null))}>
-                      {status}
-                    </Badge>
-                    <span className="text-xs text-gray-600">{response.description}</span>
+                  <div key={status}>
+                    <div className="flex items-start gap-2">
+                      <Badge className={cn('shrink-0', statusColor(Number(status) || null))}>
+                        {status}
+                      </Badge>
+                      <span className="text-xs text-gray-600">{response.description}</span>
+                    </div>
+                    {Object.entries(response.content ?? {}).map(([contentType, media]) => (
+                      <div key={contentType} className="mt-1 ml-18">
+                        <span className="text-xs font-mono text-gray-500">{contentType}</span>
+                        <MediaContent media={media} />
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
@@ -107,6 +111,31 @@ export function EndpointItem({ path, method, operation, serverUrl }: Props) {
               <TryItOut path={path} method={method} operation={operation} serverUrl={serverUrl} />
             )}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MediaContent({ media }: { media: MediaType }) {
+  const example = media.example ?? media.schema?.example;
+
+  return (
+    <div className="mt-1 space-y-2">
+      {example !== undefined && (
+        <div>
+          <span className="text-[10px] font-semibold uppercase text-gray-400">Example</span>
+          <pre className="mt-1 overflow-auto rounded bg-gray-900 p-3 text-xs text-gray-100">
+            {JSON.stringify(example, null, 2)}
+          </pre>
+        </div>
+      )}
+      {media.schema && (
+        <div>
+          <span className="text-[10px] font-semibold uppercase text-gray-400">Schema</span>
+          <pre className="mt-1 overflow-auto rounded bg-gray-900 p-3 text-xs text-gray-100">
+            {JSON.stringify(media.schema, null, 2)}
+          </pre>
         </div>
       )}
     </div>
