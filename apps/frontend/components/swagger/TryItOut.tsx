@@ -45,6 +45,8 @@ function buildUrl(
 export function TryItOut({ path, method, operation, serverUrl }: Props) {
   const pathParamNames = extractPathParamNames(path);
   const definedQueryParams = (operation.parameters ?? []).filter((p) => p.in === 'query');
+  const definedHeaderParams = (operation.parameters ?? []).filter((p) => p.in === 'header');
+  const definedCookieParams = (operation.parameters ?? []).filter((p) => p.in === 'cookie');
 
   const [server, setServer] = useState(serverUrl);
   const [pathParams, setPathParams] = useState<Record<string, string>>(
@@ -52,6 +54,12 @@ export function TryItOut({ path, method, operation, serverUrl }: Props) {
   );
   const [queryParams, setQueryParams] = useState<KeyValue[]>(
     definedQueryParams.map((p) => ({ key: p.name, value: '' })),
+  );
+  const [headerParams, setHeaderParams] = useState<Record<string, string>>(
+    Object.fromEntries(definedHeaderParams.map((p) => [p.name, ''])),
+  );
+  const [cookieParams, setCookieParams] = useState<Record<string, string>>(
+    Object.fromEntries(definedCookieParams.map((p) => [p.name, ''])),
   );
   const [headers, setHeaders] = useState<KeyValue[]>([
     { key: 'Content-Type', value: 'application/json' },
@@ -63,7 +71,22 @@ export function TryItOut({ path, method, operation, serverUrl }: Props) {
   const hasBody = ['post', 'put', 'patch'].includes(method);
 
   function getRequestHeaders(): Record<string, string> {
-    return Object.fromEntries(headers.filter((h) => h.key && h.value).map((h) => [h.key, h.value]));
+    const result = Object.fromEntries(
+      headers.filter((h) => h.key && h.value).map((h) => [h.key, h.value]),
+    );
+
+    for (const [key, value] of Object.entries(headerParams)) {
+      if (value) result[key] = value;
+    }
+
+    const cookie = Object.entries(cookieParams)
+      .filter(([, value]) => value)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('; ');
+
+    if (cookie) result['Cookie'] = cookie;
+
+    return result;
   }
 
   function getFinalUrl() {
@@ -180,6 +203,54 @@ export function TryItOut({ path, method, operation, serverUrl }: Props) {
         </div>
       </div>
 
+      {definedHeaderParams.length > 0 && (
+        <div>
+          <label className="text-xs font-semibold uppercase text-gray-400">Header Parameters</label>
+          <div className="mt-1 space-y-1">
+            {definedHeaderParams.map((p) => (
+              <div key={p.name} className="flex items-center gap-2">
+                <span className="w-32 text-xs font-mono text-purple-600">
+                  {p.name}
+                  {p.required ? '*' : ''}
+                </span>
+                <input
+                  className="flex-1 rounded border px-2 py-1 text-sm"
+                  placeholder={p.name}
+                  value={headerParams[p.name]}
+                  onChange={(e) =>
+                    setHeaderParams((prev) => ({ ...prev, [p.name]: e.target.value }))
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {definedCookieParams.length > 0 && (
+        <div>
+          <label className="text-xs font-semibold uppercase text-gray-400">Cookie Parameters</label>
+          <div className="mt-1 space-y-1">
+            {definedCookieParams.map((p) => (
+              <div key={p.name} className="flex items-center gap-2">
+                <span className="w-32 text-xs font-mono text-purple-600">
+                  {p.name}
+                  {p.required ? '*' : ''}
+                </span>
+                <input
+                  className="flex-1 rounded border px-2 py-1 text-sm"
+                  placeholder={p.name}
+                  value={cookieParams[p.name]}
+                  onChange={(e) =>
+                    setCookieParams((prev) => ({ ...prev, [p.name]: e.target.value }))
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div>
         <div className="flex items-center justify-between">
           <label className="text-xs font-semibold uppercase text-gray-400">Headers</label>
@@ -249,6 +320,22 @@ export function TryItOut({ path, method, operation, serverUrl }: Props) {
           </div>
 
           {response.error && <p className="text-xs text-red-500">{response.error}</p>}
+
+          {Object.keys(response.headers).length > 0 && (
+            <div>
+              <span className="text-xs font-semibold uppercase text-gray-400">
+                Response Headers
+              </span>
+              <div className="mt-1 space-y-0.5 rounded border p-2">
+                {Object.entries(response.headers).map(([key, value]) => (
+                  <div key={key} className="flex gap-2 text-xs font-mono">
+                    <span className="text-gray-500">{key}:</span>
+                    <span className="text-gray-800 break-all">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {response.body && (
             <pre className="max-h-64 overflow-auto rounded bg-gray-900 p-3 text-xs text-gray-100">
