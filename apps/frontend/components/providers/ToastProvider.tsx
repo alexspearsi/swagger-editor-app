@@ -10,7 +10,7 @@ export function ToastProvider({ children }: Props) {
   return (
     <>
       {children}
-      <Toast.Provider placement="top end" />
+      <Toast.Provider placement="bottom" />
     </>
   );
 }
