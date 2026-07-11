@@ -6,6 +6,19 @@ export const metadata: Metadata = {
   title: 'About — SwaggerUI',
 };
 
+const FRONTEND_STACK = [
+  'Next.js 16 (App Router)',
+  'React 19',
+  'TypeScript',
+  'Tailwind CSS 4',
+  'HeroUI',
+  'Monaco Editor',
+  'React Hook Form',
+  'Zod',
+];
+
+const BACKEND_STACK = ['NestJS', 'Prisma', 'PostgreSQL (Neon)', 'Passport JWT', 'Resend'];
+
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 space-y-12">
@@ -49,6 +62,38 @@ export default function AboutPage() {
           >
             @alexspearsi
           </a>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Tech Stack</h2>
+        <div className="space-y-3">
+          <div>
+            <p className="mb-2 text-sm font-medium text-gray-500">Frontend</p>
+            <ul className="flex flex-wrap gap-2">
+              {FRONTEND_STACK.map((tech) => (
+                <li
+                  key={tech}
+                  className="rounded-full border bg-white px-3 py-1 text-xs text-gray-700"
+                >
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="mb-2 text-sm font-medium text-gray-500">Backend</p>
+            <ul className="flex flex-wrap gap-2">
+              {BACKEND_STACK.map((tech) => (
+                <li
+                  key={tech}
+                  className="rounded-full border bg-white px-3 py-1 text-xs text-gray-700"
+                >
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
