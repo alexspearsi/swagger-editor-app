@@ -14,6 +14,7 @@
     "build:frontend": "npm run build --workspace=apps/frontend",
     "build:backend": "npm run build --workspace=apps/backend",
     "test": "npm run test --workspaces",
+    "test:coverage": "npm run test:coverage --workspace=apps/frontend",
     "lint": "eslint \"apps/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"apps/**/*.{ts,tsx}\" --fix",
     "format": "prettier --write \"apps/**/*.{ts,tsx,json,css,md}\"",

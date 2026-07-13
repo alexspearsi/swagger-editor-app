@@ -19,6 +19,7 @@ export default tseslint.config(
       "**/node_modules/**",
       "**/.react-router/**",
       "**/coverage/**",
+      "**/.next/**",
     ],
   },
   {
@@ -69,6 +70,14 @@ export default tseslint.config(
   {
     files: ["apps/frontend/app/routes/**/*.{ts,tsx}", "apps/frontend/app/root.tsx"],
     rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
+  {
+    files: ["apps/frontend/tests/**/*.{ts,tsx}"],
+    rules: {
+      "react-compiler/react-compiler": "off",
+      "react-hooks/set-state-in-effect": "off",
       "react-refresh/only-export-components": "off",
     },
   },
