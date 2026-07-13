@@ -48,12 +48,36 @@ npm install
 
 ### Environment Variables
 
-Copy the example files and fill in the values:
+Create `apps/backend/.env` with the following (shared dev credentials, ready to use):
 
 ```bash
-cp apps/backend/.env.example apps/backend/.env
-cp apps/frontend/.env.example apps/frontend/.env
+NODE_ENV=development
+
+PORT=3001
+
+ALLOWED_ORIGIN=http://localhost:3000
+
+JWT_SECRET_KEY=secret123123
+JWT_SECRET_REFRESH_KEY=secret123123
+TOKEN_EXPIRE_TIME=1h
+TOKEN_REFRESH_EXPIRE_TIME=24h
+
+RESEND_API_KEY=re_7HxcPH8V_K2G172vhfeJeKkjfASiyvMby
+MAIL_FROM=noreply@swaggergo.com
+
+GOOGLE_RECAPTCHA_SECRET_KEY=6Le8K-YsAAAAAM5ut6A3jSK1sis3T8aTDqDh_NVt
+
+DATABASE_URL=postgresql://neondb_owner:npg_ImR0kNgdJif7@ep-withered-dust-alntatn9-pooler.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 ```
+
+Create `apps/frontend/.env` with:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+> These are the actual working development credentials for this project (shared Neon database,
+> Resend email, reCAPTCHA) — no need to request or generate your own to run the app locally.
 
 ### Running Locally
 
@@ -84,6 +108,9 @@ npm run format
 
 # Tests
 npm run test
+
+# Frontend tests with coverage report
+npm run test:coverage
 ```
 
 ## Project Structure
