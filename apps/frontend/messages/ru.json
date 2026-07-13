@@ -1,0 +1,79 @@
+{
+  "Nav": {
+    "about": "О проекте",
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "signOut": "Выйти",
+    "history": "История",
+    "signOutSuccess": "Вы вышли из аккаунта"
+  },
+  "Footer": {
+    "builtFor": "Создано для",
+    "about": "О проекте"
+  },
+  "SignIn": {
+    "title": "Вход",
+    "description": "Введите данные для входа",
+    "email": "Email",
+    "password": "Пароль",
+    "submit": "Войти",
+    "submitting": "Выполняется вход…",
+    "noAccount": "Нет аккаунта?",
+    "signUp": "Регистрация",
+    "welcomeBack": "С возвращением!"
+  },
+  "SignUp": {
+    "title": "Регистрация",
+    "description": "Создайте аккаунт, чтобы начать",
+    "name": "Имя",
+    "email": "Email",
+    "password": "Пароль",
+    "passwordRepeat": "Повторите пароль",
+    "submit": "Зарегистрироваться",
+    "submitting": "Создание аккаунта…",
+    "haveAccount": "Уже есть аккаунт?",
+    "signIn": "Войти",
+    "checkInbox": "Проверьте почту и подтвердите email, чтобы активировать аккаунт"
+  },
+  "Verification": {
+    "title": "Подтверждение email",
+    "description": "Подтверждаем ваш email",
+    "verifying": "Подтверждаем email…",
+    "success": "Email подтверждён! Перенаправляем на главную…",
+    "tokenMissing": "Отсутствует токен подтверждения.",
+    "genericError": "Что-то пошло не так. Попробуйте ещё раз.",
+    "goToSignIn": "Перейти ко входу",
+    "backToSignIn": "Вернуться ко входу"
+  },
+  "About": {
+    "title": "О проекте",
+    "intro": "Это приложение было создано как дипломная работа для <link>RS School</link> — бесплатного онлайн-курса по JavaScript и Frontend-разработке. Цель — создать полнофункциональный редактор Swagger/OpenAPI и REST-клиент с авторизацией, историей запросов и сохранением схем.",
+    "team": "Команда",
+    "role": "Fullstack-разработчик",
+    "techStack": "Стек технологий",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "course": "Курс",
+    "courseText": "<link>RS School</link> — это бесплатная инициатива с менторством, код-ревью и реальными заданиями. Этот проект — часть курса по React.",
+    "backToEditor": "← Назад в редактор"
+  },
+  "History": {
+    "title": "История запросов",
+    "empty": "Вы ещё не выполнили ни одного запроса",
+    "goToEditor": "Перейти в редактор"
+  },
+  "Editor": {
+    "schemaEditor": "Редактор схемы",
+    "save": "Сохранить",
+    "saving": "Сохранение...",
+    "saved": "Схема сохранена",
+    "saveFailed": "Не удалось сохранить схему",
+    "pasteSchema": "Вставьте корректную OpenAPI-схему в редактор",
+    "failedToParse": "Не удалось разобрать схему",
+    "mustBeObject": "Схема должна быть объектом",
+    "missingFields": "Это не OpenAPI-схема: отсутствует поле \"openapi\", \"swagger\" или \"paths\""
+  },
+  "LanguageSwitcher": {
+    "label": "Язык"
+  }
+}

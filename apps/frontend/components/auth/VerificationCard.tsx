@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button, Card, toast } from '@heroui/react';
 
 import { confirmEmail } from '@/app/lib/api/auth';
@@ -16,10 +17,9 @@ type Props = {
 
 export function VerificationCard({ token }: Props) {
   const router = useRouter();
+  const t = useTranslations('Verification');
   const [status, setStatus] = useState<Status>(() => (token ? 'loading' : 'error'));
-  const [error, setError] = useState<string | null>(() =>
-    token ? null : 'Verification token is missing.',
-  );
+  const [error, setError] = useState<string | null>(() => (token ? null : t('tokenMissing')));
 
   useEffect(() => {
     if (!token) {
@@ -38,35 +38,30 @@ export function VerificationCard({ token }: Props) {
       .catch((err) => {
         setStatus('error');
 
-        const message =
-          err instanceof ApiError ? err.message : 'Something went wrong. Please try again.';
+        const message = err instanceof ApiError ? err.message : t('genericError');
 
         setError(message);
         toast.danger(message);
       });
-  }, [token, router]);
+  }, [token, router, t]);
 
   return (
     <Card className="w-full max-w-sm">
       <Card.Header>
-        <Card.Title>Email Verification</Card.Title>
-        <Card.Description>Confirming your email address</Card.Description>
+        <Card.Title>{t('title')}</Card.Title>
+        <Card.Description>{t('description')}</Card.Description>
       </Card.Header>
 
       <Card.Content className="flex flex-col items-center gap-4 py-6">
-        {status === 'loading' && <p className="text-sm text-gray-500">Verifying your email…</p>}
+        {status === 'loading' && <p className="text-sm text-gray-500">{t('verifying')}</p>}
 
-        {status === 'success' && (
-          <p className="text-sm text-green-600">
-            Your email has been verified! Redirecting to home…
-          </p>
-        )}
+        {status === 'success' && <p className="text-sm text-green-600">{t('success')}</p>}
 
         {status === 'error' && (
           <>
             <p className="text-sm text-red-500">{error}</p>
             <Button variant="primary" onPress={() => router.push('/sign-in')}>
-              Go to Sign In
+              {t('goToSignIn')}
             </Button>
           </>
         )}
@@ -75,9 +70,8 @@ export function VerificationCard({ token }: Props) {
       {status !== 'loading' && (
         <Card.Footer className="justify-center">
           <p className="text-sm text-gray-500">
-            Back to{' '}
             <NextLink href="/sign-in" className="underline hover:text-gray-900">
-              Sign In
+              {t('backToSignIn')}
             </NextLink>
           </p>
         </Card.Footer>

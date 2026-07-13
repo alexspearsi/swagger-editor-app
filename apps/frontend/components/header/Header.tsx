@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/app/lib/utils/cn';
 
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { NavAuthButtons } from './NavAuthButtons';
 
 export function AppHeader() {
+  const t = useTranslations('Nav');
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,11 +38,14 @@ export function AppHeader() {
             href="/about"
             className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
           >
-            About
+            {t('about')}
           </NextLink>
         </nav>
 
-        <NavAuthButtons />
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <NavAuthButtons />
+        </div>
       </div>
     </header>
   );

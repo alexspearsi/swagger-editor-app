@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import { useTranslations } from 'next-intl';
 import type { OnMount } from '@monaco-editor/react';
 import * as yaml from 'yaml';
 import { Button } from '@heroui/react';
@@ -25,6 +26,7 @@ export function SchemaEditor({
   onSave,
   isSaving,
 }: Props) {
+  const t = useTranslations('Editor');
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const pendingValueRef = useRef<string | null>(null);
   const onChangeRef = useRef(onChange);
@@ -81,12 +83,12 @@ export function SchemaEditor({
     onFormatChange(newFormat);
   }
 
-  const saveLabel = isSaving ? 'Saving...' : 'Save';
+  const saveLabel = isSaving ? t('saving') : t('save');
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between px-4 py-2 border-b bg-gray-50">
-        <span className="text-sm font-medium text-gray-600">Schema Editor</span>
+        <span className="text-sm font-medium text-gray-600">{t('schemaEditor')}</span>
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono text-gray-400 uppercase">{format}</span>
           <Button size="sm" variant="outline" onPress={handleToggleFormat}>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import * as yaml from 'yaml';
 
 import type { OpenAPISchema } from '@/types/openapi';
@@ -23,7 +24,11 @@ function detectFormat(value: string): 'json' | 'yaml' {
 
 type ParseResult = { data: OpenAPISchema; error: null } | { data: null; error: string | null };
 
-function parseSchema(value: string, format: 'json' | 'yaml'): ParseResult {
+function parseSchema(
+  value: string,
+  format: 'json' | 'yaml',
+  messages: { failedToParse: string; mustBeObject: string; missingFields: string },
+): ParseResult {
   if (!value.trim()) {
     return { data: null, error: null };
   }
@@ -33,20 +38,17 @@ function parseSchema(value: string, format: 'json' | 'yaml'): ParseResult {
   try {
     parsed = format === 'json' ? JSON.parse(value) : yaml.parse(value);
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Failed to parse schema';
+    const message = err instanceof Error ? err.message : messages.failedToParse;
 
     return { data: null, error: `Invalid ${format.toUpperCase()}: ${message}` };
   }
 
   if (!parsed || typeof parsed !== 'object') {
-    return { data: null, error: 'Schema must be an object' };
+    return { data: null, error: messages.mustBeObject };
   }
 
   if (!('paths' in parsed) && !('openapi' in parsed) && !('swagger' in parsed)) {
-    return {
-      data: null,
-      error: 'Not a valid OpenAPI schema: missing "openapi", "swagger" or "paths" field',
-    };
+    return { data: null, error: messages.missingFields };
   }
 
   return { data: parsed as OpenAPISchema, error: null };
@@ -59,10 +61,16 @@ export function SwaggerWorkspace() {
   const [isSaving, setIsSaving] = useState(false);
   const { isAuthenticated } = useAuth();
   const isLandscape = useOrientation();
+  const t = useTranslations('Editor');
 
   const { data: parsedSchema, error: schemaError } = useMemo(
-    () => parseSchema(rawSchema, format),
-    [rawSchema, format],
+    () =>
+      parseSchema(rawSchema, format, {
+        failedToParse: t('failedToParse'),
+        mustBeObject: t('mustBeObject'),
+        missingFields: t('missingFields'),
+      }),
+    [rawSchema, format, t],
   );
 
   useEffect(() => {
@@ -86,9 +94,9 @@ export function SwaggerWorkspace() {
 
     try {
       await saveSchema(rawSchema);
-      toast.success('Schema saved');
+      toast.success(t('saved'));
     } catch {
-      toast.danger('Failed to save schema');
+      toast.danger(t('saveFailed'));
     } finally {
       setIsSaving(false);
     }

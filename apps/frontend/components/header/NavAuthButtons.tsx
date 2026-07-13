@@ -2,6 +2,7 @@
 
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button, buttonVariants, toast } from '@heroui/react';
 
 import { useAuth } from '@/components/providers/AuthProvider';
@@ -10,11 +11,12 @@ import { logout } from '@/app/lib/api/auth';
 export function NavAuthButtons() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const t = useTranslations('Nav');
 
   async function handleLogout() {
     await logout();
 
-    toast.success('Signed out successfully');
+    toast.success(t('signOutSuccess'));
     router.refresh();
   }
 
@@ -22,10 +24,10 @@ export function NavAuthButtons() {
     return (
       <div className="flex items-center gap-2">
         <NextLink href="/history" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-          History
+          {t('history')}
         </NextLink>
         <Button size="sm" variant="secondary" onPress={handleLogout}>
-          Sign Out
+          {t('signOut')}
         </Button>
       </div>
     );
@@ -34,10 +36,10 @@ export function NavAuthButtons() {
   return (
     <div className="flex items-center gap-2">
       <NextLink href="/sign-in" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-        Sign In
+        {t('signIn')}
       </NextLink>
       <NextLink href="/sign-up" className={buttonVariants({ variant: 'primary', size: 'sm' })}>
-        Sign Up
+        {t('signUp')}
       </NextLink>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Card, FieldError, Input, Label, TextField, toast } from '@heroui/react';
@@ -11,6 +12,7 @@ import { ApiError } from '@/app/lib/api/client';
 
 export function SignInForm() {
   const router = useRouter();
+  const t = useTranslations('SignIn');
 
   const {
     control,
@@ -25,7 +27,7 @@ export function SignInForm() {
     try {
       await login(data);
 
-      toast.success('Welcome back!');
+      toast.success(t('welcomeBack'));
 
       router.push('/');
       router.refresh();
@@ -39,8 +41,8 @@ export function SignInForm() {
   return (
     <Card className="w-full max-w-sm">
       <Card.Header>
-        <Card.Title>Sign In</Card.Title>
-        <Card.Description>Enter your credentials to continue</Card.Description>
+        <Card.Title>{t('title')}</Card.Title>
+        <Card.Description>{t('description')}</Card.Description>
       </Card.Header>
 
       <Card.Content>
@@ -56,7 +58,7 @@ export function SignInForm() {
                 onBlur={field.onBlur}
                 fullWidth
               >
-                <Label>Email</Label>
+                <Label>{t('email')}</Label>
                 <Input type="email" placeholder="you@example.com" />
                 <FieldError>{fieldState.error?.message}</FieldError>
               </TextField>
@@ -74,7 +76,7 @@ export function SignInForm() {
                 onBlur={field.onBlur}
                 fullWidth
               >
-                <Label>Password</Label>
+                <Label>{t('password')}</Label>
                 <Input type="password" placeholder="••••••••" />
                 <FieldError>{fieldState.error?.message}</FieldError>
               </TextField>
@@ -82,16 +84,16 @@ export function SignInForm() {
           />
 
           <Button type="submit" variant="primary" fullWidth isDisabled={isSubmitting}>
-            {isSubmitting ? 'Signing in…' : 'Sign In'}
+            {isSubmitting ? t('submitting') : t('submit')}
           </Button>
         </form>
       </Card.Content>
 
       <Card.Footer className="justify-center">
         <p className="text-sm text-gray-500">
-          No account?{' '}
+          {t('noAccount')}{' '}
           <NextLink href="/sign-up" className="underline hover:text-gray-900">
-            Sign Up
+            {t('signUp')}
           </NextLink>
         </p>
       </Card.Footer>

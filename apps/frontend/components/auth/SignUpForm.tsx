@@ -2,6 +2,7 @@
 
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Card, FieldError, Input, Label, TextField, toast } from '@heroui/react';
@@ -12,6 +13,7 @@ import { SignUpFormData, signUpSchema } from '@/app/lib/api/validation/auth';
 
 export function SignUpForm() {
   const router = useRouter();
+  const t = useTranslations('SignUp');
 
   const {
     control,
@@ -26,7 +28,7 @@ export function SignUpForm() {
     try {
       await registerUser(data);
 
-      toast.info('Check your inbox and confirm your email to activate your account');
+      toast.info(t('checkInbox'));
 
       router.push('/');
       router.refresh();
@@ -40,8 +42,8 @@ export function SignUpForm() {
   return (
     <Card className="w-full max-w-sm">
       <Card.Header>
-        <Card.Title>Sign Up</Card.Title>
-        <Card.Description>Create an account to get started</Card.Description>
+        <Card.Title>{t('title')}</Card.Title>
+        <Card.Description>{t('description')}</Card.Description>
       </Card.Header>
 
       <Card.Content>
@@ -57,7 +59,7 @@ export function SignUpForm() {
                 onBlur={field.onBlur}
                 fullWidth
               >
-                <Label>Name</Label>
+                <Label>{t('name')}</Label>
                 <Input placeholder="Alex Spears" />
                 <FieldError>{fieldState.error?.message}</FieldError>
               </TextField>
@@ -75,7 +77,7 @@ export function SignUpForm() {
                 onBlur={field.onBlur}
                 fullWidth
               >
-                <Label>Email</Label>
+                <Label>{t('email')}</Label>
                 <Input type="email" placeholder="alexspears@yahoo.com" />
                 <FieldError>{fieldState.error?.message}</FieldError>
               </TextField>
@@ -93,7 +95,7 @@ export function SignUpForm() {
                 onBlur={field.onBlur}
                 fullWidth
               >
-                <Label>Password</Label>
+                <Label>{t('password')}</Label>
                 <Input type="password" placeholder="••••••••" />
                 <FieldError>{fieldState.error?.message}</FieldError>
               </TextField>
@@ -111,7 +113,7 @@ export function SignUpForm() {
                 onBlur={field.onBlur}
                 fullWidth
               >
-                <Label>Repeat Password</Label>
+                <Label>{t('passwordRepeat')}</Label>
                 <Input type="password" placeholder="••••••••" />
                 <FieldError>{fieldState.error?.message}</FieldError>
               </TextField>
@@ -119,16 +121,16 @@ export function SignUpForm() {
           />
 
           <Button type="submit" variant="primary" fullWidth isDisabled={isSubmitting}>
-            {isSubmitting ? 'Creating account…' : 'Sign Up'}
+            {isSubmitting ? t('submitting') : t('submit')}
           </Button>
         </form>
       </Card.Content>
 
       <Card.Footer className="justify-center">
         <p className="text-sm text-gray-500">
-          Already have an account?{' '}
+          {t('haveAccount')}{' '}
           <NextLink href="/sign-in" className="underline hover:text-gray-900">
-            Sign In
+            {t('signIn')}
           </NextLink>
         </p>
       </Card.Footer>

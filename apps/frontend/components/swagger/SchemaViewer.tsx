@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import type { HttpMethod, OpenAPISchema } from '@/types/openapi';
 import { HTTP_METHODS } from '@/types/openapi';
 
@@ -11,6 +13,7 @@ type Props = {
 };
 
 export function SchemaViewer({ schema, error }: Props) {
+  const t = useTranslations('Editor');
   const serverUrl = schema?.servers?.[0]?.url ?? '';
 
   if (!schema) {
@@ -19,7 +22,7 @@ export function SchemaViewer({ schema, error }: Props) {
         {error ? (
           <p className="text-sm text-red-500">{error}</p>
         ) : (
-          <p className="text-sm text-gray-400">Paste a valid OpenAPI schema in the editor</p>
+          <p className="text-sm text-gray-400">{t('pasteSchema')}</p>
         )}
       </div>
     );
