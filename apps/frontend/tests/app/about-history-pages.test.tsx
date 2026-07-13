@@ -48,8 +48,8 @@ describe('HistoryPage', () => {
     render(await HistoryPage());
 
     expect(screen.getByText('Request History')).toBeInTheDocument();
-    expect(screen.getByText('entry: /pets')).toBeInTheDocument();
-    expect(screen.getByText('entry: /owners')).toBeInTheDocument();
+    expect(await screen.findByText('entry: /pets')).toBeInTheDocument();
+    expect(await screen.findByText('entry: /owners')).toBeInTheDocument();
   });
 
   it('treats a non-ApiError thrown by getHistory as unexpected and re-throws it', async () => {

@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { getTranslations } from 'next-intl/server';
 
 import { ApiError } from '@/app/lib/api/client';
 import { getHistory } from '@/app/lib/api/history';
 import type { HistoryEntry } from '@/app/lib/api/history';
-import { HistoryCard } from '@/components/history/HistoryCard';
+
+const HistoryList = dynamic(() => import('@/components/history/HistoryList'));
 
 export default async function HistoryPage() {
   const t = await getTranslations('History');
@@ -32,11 +34,7 @@ export default async function HistoryPage() {
   return (
     <div className="container mx-auto max-w-4xl p-6">
       <h1 className="text-xl font-semibold text-gray-900 mb-6">{t('title')}</h1>
-      <div className="space-y-2">
-        {entries.map((entry) => (
-          <HistoryCard key={entry.id} entry={entry} />
-        ))}
-      </div>
+      <HistoryList entries={entries} />
     </div>
   );
 }
