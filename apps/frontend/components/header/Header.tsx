@@ -1,0 +1,52 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import NextLink from 'next/link';
+import { useTranslations } from 'next-intl';
+
+import { cn } from '@/app/lib/utils/cn';
+
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { NavAuthButtons } from './NavAuthButtons';
+
+export function AppHeader() {
+  const t = useTranslations('Nav');
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <header
+      className={cn(
+        'sticky top-0 z-50 w-full shrink-0 transition-all duration-300',
+        isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-2' : 'bg-white py-4',
+      )}
+    >
+      <div className="w-full px-6 flex items-center justify-between">
+        <NextLink href="/" className="font-bold text-xl tracking-tight">
+          SwaggerUI
+        </NextLink>
+
+        <nav>
+          <NextLink
+            href="/about"
+            className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            {t('about')}
+          </NextLink>
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <NavAuthButtons />
+        </div>
+      </div>
+    </header>
+  );
+}

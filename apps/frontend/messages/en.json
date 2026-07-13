@@ -1,0 +1,79 @@
+{
+  "Nav": {
+    "about": "About",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "history": "History",
+    "signOutSuccess": "Signed out successfully"
+  },
+  "Footer": {
+    "builtFor": "Built for",
+    "about": "About"
+  },
+  "SignIn": {
+    "title": "Sign In",
+    "description": "Enter your credentials to continue",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign In",
+    "submitting": "Signing in…",
+    "noAccount": "No account?",
+    "signUp": "Sign Up",
+    "welcomeBack": "Welcome back!"
+  },
+  "SignUp": {
+    "title": "Sign Up",
+    "description": "Create an account to get started",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "passwordRepeat": "Repeat Password",
+    "submit": "Sign Up",
+    "submitting": "Creating account…",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "checkInbox": "Check your inbox and confirm your email to activate your account"
+  },
+  "Verification": {
+    "title": "Email Verification",
+    "description": "Confirming your email address",
+    "verifying": "Verifying your email…",
+    "success": "Your email has been verified! Redirecting to home…",
+    "tokenMissing": "Verification token is missing.",
+    "genericError": "Something went wrong. Please try again.",
+    "goToSignIn": "Go to Sign In",
+    "backToSignIn": "Back to Sign In"
+  },
+  "About": {
+    "title": "About",
+    "intro": "This application was built as a graded assignment for <link>RS School</link> — a free online JavaScript and Frontend development course. The goal was to create a full-featured Swagger/OpenAPI editor and REST client with authentication, request history, and schema persistence.",
+    "team": "Team",
+    "role": "Fullstack Developer",
+    "techStack": "Tech Stack",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "course": "Course",
+    "courseText": "<link>RS School</link> is a free community-driven learning initiative with mentorship, code reviews, and real-world assignments. This project is part of the React course.",
+    "backToEditor": "← Back to editor"
+  },
+  "History": {
+    "title": "Request History",
+    "empty": "You haven't executed any requests yet",
+    "goToEditor": "Go to Editor"
+  },
+  "Editor": {
+    "schemaEditor": "Schema Editor",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Schema saved",
+    "saveFailed": "Failed to save schema",
+    "pasteSchema": "Paste a valid OpenAPI schema in the editor",
+    "failedToParse": "Failed to parse schema",
+    "mustBeObject": "Schema must be an object",
+    "missingFields": "Not a valid OpenAPI schema: missing \"openapi\", \"swagger\" or \"paths\" field"
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
+  }
+}

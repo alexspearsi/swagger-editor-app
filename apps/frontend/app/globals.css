@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+@import '@heroui/styles';
+
+/* Toasts should hug their text instead of taking the library's fixed 460px width */
+.toast--bottom {
+  left: 50%;
+  right: auto;
+  width: max-content;
+  max-width: min(460px, calc(100vw - 2rem));
+  transform: translateX(-50%);
+}

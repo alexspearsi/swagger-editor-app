@@ -1,0 +1,79 @@
+{
+  "Nav": {
+    "about": "אודות",
+    "signIn": "התחברות",
+    "signUp": "הרשמה",
+    "signOut": "התנתקות",
+    "history": "היסטוריה",
+    "signOutSuccess": "התנתקת בהצלחה"
+  },
+  "Footer": {
+    "builtFor": "נבנה עבור",
+    "about": "אודות"
+  },
+  "SignIn": {
+    "title": "התחברות",
+    "description": "הזן את הפרטים שלך כדי להמשיך",
+    "email": "אימייל",
+    "password": "סיסמה",
+    "submit": "התחבר",
+    "submitting": "מתחבר…",
+    "noAccount": "אין לך חשבון?",
+    "signUp": "הרשמה",
+    "welcomeBack": "ברוך שובך!"
+  },
+  "SignUp": {
+    "title": "הרשמה",
+    "description": "צור חשבון כדי להתחיל",
+    "name": "שם",
+    "email": "אימייל",
+    "password": "סיסמה",
+    "passwordRepeat": "חזור על הסיסמה",
+    "submit": "הירשם",
+    "submitting": "יוצר חשבון…",
+    "haveAccount": "כבר יש לך חשבון?",
+    "signIn": "התחברות",
+    "checkInbox": "בדוק את תיבת הדואר שלך ואשר את האימייל כדי להפעיל את החשבון"
+  },
+  "Verification": {
+    "title": "אימות אימייל",
+    "description": "מאמתים את כתובת האימייל שלך",
+    "verifying": "מאמת את האימייל שלך…",
+    "success": "האימייל שלך אומת! מעביר לדף הבית…",
+    "tokenMissing": "חסר טוקן אימות.",
+    "genericError": "משהו השתבש. נסה שוב.",
+    "goToSignIn": "עבור להתחברות",
+    "backToSignIn": "חזרה להתחברות"
+  },
+  "About": {
+    "title": "אודות",
+    "intro": "האפליקציה נבנתה כפרויקט גמר עבור <link>RS School</link> — קורס מקוון וחינמי ל-JavaScript ולפיתוח Frontend. המטרה הייתה ליצור עורך Swagger/OpenAPI ולקוח REST מלאים, עם אימות משתמשים, היסטוריית בקשות ושמירת סכימות.",
+    "team": "צוות",
+    "role": "מפתח Fullstack",
+    "techStack": "טכנולוגיות",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "course": "קורס",
+    "courseText": "<link>RS School</link> הוא מיזם לימודי קהילתי וחינמי הכולל חונכות, סקירות קוד ומשימות מהעולם האמיתי. הפרויקט הזה הוא חלק מקורס ה-React.",
+    "backToEditor": "→ חזרה לעורך"
+  },
+  "History": {
+    "title": "היסטוריית בקשות",
+    "empty": "עדיין לא ביצעת אף בקשה",
+    "goToEditor": "עבור לעורך"
+  },
+  "Editor": {
+    "schemaEditor": "עורך סכימה",
+    "save": "שמור",
+    "saving": "שומר...",
+    "saved": "הסכימה נשמרה",
+    "saveFailed": "שמירת הסכימה נכשלה",
+    "pasteSchema": "הדבק סכימת OpenAPI תקינה בעורך",
+    "failedToParse": "ניתוח הסכימה נכשל",
+    "mustBeObject": "הסכימה חייבת להיות אובייקט",
+    "missingFields": "זו אינה סכימת OpenAPI תקינה: חסר שדה \"openapi\", \"swagger\" או \"paths\""
+  },
+  "LanguageSwitcher": {
+    "label": "שפה"
+  }
+}
